@@ -1,0 +1,16 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Microdados INEP (baixar localmente; não versionar)
+# https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem
+microdados_enem*/
+*.zip
+
+secrets/*
+!secrets/README.md
+!secrets/.gitignore
+.env
+.Renviron
+rsconnect/

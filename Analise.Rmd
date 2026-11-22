@@ -1,0 +1,47 @@
+
+```{r}
+path = "microdados_enem_2025/DADOS/RESULTADOS_2025.csv"
+dados = readr::read_delim(path, delim = ";")
+
+path2 = "microdados_enem_2023/DADOS/RESULTADOS_2023.csv"
+dados2 = readr::read_delim(path, delim = ";", n = 500)
+```
+
+```{r}
+sum(dados$CO_ESCOLA |> is.na() %>%  `!`())
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+dados_limpos = dados %>% 
+  select(NU_SEQUENCIAL, TP_DEPENDENCIA_ADM_ESC, CO_ESCOLA, NO_MUNICIPIO_ESC, SG_UF_PROVA, NU_NOTA_LC, NU_NOTA_CN,
+         NU_NOTA_CH, NU_NOTA_MT, NU_NOTA_REDACAO)
+```
+
+
+```{r}
+analise = dados_limpos %>% 
+  mutate(MEDIA = rowMeans(dados_limpos[,6:10])) %>% 
+  group_by(SG_UF_PROVA, TP_DEPENDENCIA_ADM_ESC, CO_ESCOLA) %>% 
+  summarize(MEDIA = mean(MEDIA, na.rm = T)) 
+
+
+```
+
+```{r}
+analise %>% summarize(media = mean(MEDIA, na.rm = T),
+                      dp = sd(MEDIA, na.rm = T),
+                      max = max(MEDIA, na.rm = T),
+                      qt25 = quantile(MEDIA, probs = 0.75, na.rm = T)) %>% 
+  mutate(across(where(is.double), round)) %>%  
+  arrange(-media) %>%
+  View()
+```
+
+
+```{r}
+colnames(dados_limpos)
+```
